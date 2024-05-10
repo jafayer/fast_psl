@@ -1,6 +1,5 @@
 import os
 
-import idna
 import requests
 
 from .constants import ICANN_MARKERS, PRIVATE_MARKERS, PSL_FILE, PSL_URL
