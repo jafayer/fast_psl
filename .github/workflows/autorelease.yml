@@ -34,6 +34,10 @@ jobs:
         github_token: ${{ secrets.GITHUB_TOKEN }}
         branch: ${{ github.ref }}
 
+    - name: Get the date
+      id: date
+      run: echo "::set-output name=date::$(date +'%Y%m%d')"
+
     - name: Create Release
       id: create_release
       uses: actions/create-release@v1
@@ -44,7 +48,3 @@ jobs:
         release_name: Release 0.1.${{ steps.date.outputs.date }}
         draft: false
         prerelease: false
-
-    - name: Get the date
-      id: date
-      run: echo "::set-output name=date::$(date +'%Y%m%d')"
