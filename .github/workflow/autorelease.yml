@@ -1,0 +1,50 @@
+
+
+name: publish package
+
+on:
+  push:
+    branches:
+      - main
+  schedule: # midnight nightly
+    - cron: '0 0 * * *'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: Set up Python 3.12
+      uses: actions/setup-python@v2
+      with:
+        python-version: '3.12'
+
+    - name: Refresh PSL
+      run: |
+        make refresh-psl
+        git config --local user.email "action@github.com"
+        git config --local user.name "GitHub Action"
+        git add -A
+        git commit -m "Refresh PSL"
+
+    - name: Push changes
+      uses: ad-m/github-push-action@master
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        branch: ${{ github.ref }}
+
+    - name: Create Release
+      id: create_release
+      uses: actions/create-release@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        tag_name: 0.1.${{ steps.date.outputs.date }}
+        release_name: Release 0.1.${{ steps.date.outputs.date }}
+        draft: false
+        prerelease: false
+
+    - name: Get the date
+      id: date
+      run: echo "::set-output name=date::$(date +'%Y%m%d')"

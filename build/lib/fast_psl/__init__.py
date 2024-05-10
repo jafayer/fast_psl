@@ -1,0 +1,1 @@
+from .core import PublicSuffixList, etld_parts
