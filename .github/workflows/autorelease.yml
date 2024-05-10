@@ -23,8 +23,10 @@ jobs:
         make refresh-psl-curl
         git config --local user.email "action@github.com"
         git config --local user.name "GitHub Action"
-        git add -A
-        git commit -m "Refresh PSL"
+        if [[ `git status --porcelain` ]]; then
+          git add -A
+          git commit -m "Refresh PSL"
+        fi
 
     - name: Push changes
       uses: ad-m/github-push-action@master
