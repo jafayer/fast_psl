@@ -18,13 +18,9 @@ jobs:
       with:
         python-version: '3.12'
 
-    - name: Install Python dependencies
-      run: |
-        pip install -r requirements.txt
-
     - name: Refresh PSL
       run: |
-        make refresh-psl
+        make refresh-psl-curl
         git config --local user.email "action@github.com"
         git config --local user.name "GitHub Action"
         git add -A
