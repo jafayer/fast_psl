@@ -13,26 +13,31 @@ jobs:
     steps:
     - uses: actions/checkout@v2
 
-    - name: Set up Python 3.12
-      uses: actions/setup-python@v2
-      with:
-        python-version: '3.12'
-
     - name: Refresh PSL
-      run: |
+      run: | # get the latest public suffix list and write to file
         make refresh-psl-curl
+      shell: bash
+
+    - name: Configure Git
+      run: |
         git config --local user.email "action@github.com"
         git config --local user.name "GitHub Action"
-        if [[ `git status --porcelain` ]]; then
-          git add -A
-          git commit -m "Refresh PSL"
-        fi
 
-    - name: Push changes
-      uses: ad-m/github-push-action@master
-      with:
-        github_token: ${{ secrets.GITHUB_TOKEN }}
-        branch: ${{ github.ref }}
+    - name: Add deployment key
+      run: |
+        echo "${{ secrets.DEPLOY_KEY_PRIVKEY }}" > ~/.ssh/id_rsa
+        chmod 600 ~/.ssh/id_rsa
+        ssh-keyscan github.com >> ~/.ssh/known_hosts
+      shell: bash
+      env:
+        DEPLOYMENT_KEY: ${{ secrets.DEPLOYMENT_KEY }}
+
+    - name: Commit and push
+      run: |
+        git add public_suffix_list.dat
+        git commit -m "Update public suffix list"
+        git push origin main --verbose
+      shell: bash
 
     - name: Get the date
       id: date
