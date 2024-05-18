@@ -2,7 +2,7 @@ from dataclasses import dataclass
 from marisa_trie import Trie, LARGE_CACHE
 from functools import reduce
 
-from .helpers import get_local_public_suffix_list, fetch_remote_public_suffix_list, filter_public_or_private_block, to_punycode, should_store_punycode, reverse, sanitize_domain
+from .helpers import get_local_public_suffix_list, get_marisa_trie, fetch_remote_public_suffix_list, filter_public_or_private_block, to_punycode, should_store_punycode, reverse, sanitize_domain
 
 @dataclass
 class etld_parts:
@@ -22,7 +22,7 @@ class PublicSuffixList:
         self.strict = strict
 
         if trie_path is not None:
-            self.public_suffixes = Trie().load(trie_path)
+            self.public_suffixes = get_marisa_trie(trie_path)
         elif psl_text is not None:
             domains = self._process_psl_text(psl_text)
             self.public_suffixes = Trie(domains, cache_size=LARGE_CACHE)
@@ -35,21 +35,17 @@ class PublicSuffixList:
             domains = self._process_psl_text(psl_text)
             self.public_suffixes = Trie(domains, cache_size=LARGE_CACHE)
         else:
-            try:
-                psl_text = get_local_public_suffix_list()
-                domains = self._process_psl_text(psl_text)
-                self.public_suffixes = Trie(domains, cache_size=LARGE_CACHE)
+            try: # first try to load the marisa trie
+                self.public_suffixes = get_marisa_trie()
             except FileNotFoundError:
-                psl_text = fetch_remote_public_suffix_list()
-                domains = self._process_psl_text(psl_text)
-                self.public_suffixes = Trie(domains, cache_size=LARGE_CACHE)
-        try:
-            if file_path:
-                psl_text = get_local_public_suffix_list(file_path)
-            else:
-                psl_text = get_local_public_suffix_list()
-        except FileNotFoundError:
-            psl_text = fetch_remote_public_suffix_list()
+                try: # next try to load the local file
+                    psl_text = get_local_public_suffix_list()
+                    domains = self._process_psl_text(psl_text)
+                    self.public_suffixes = Trie(domains, cache_size=LARGE_CACHE)
+                except FileNotFoundError: # finally, fetch the remote file
+                    psl_text = fetch_remote_public_suffix_list()
+                    domains = self._process_psl_text(psl_text)
+                    self.public_suffixes = Trie(domains, cache_size=LARGE_CACHE)
 
     @staticmethod
     def from_marisa(trie_path: str):

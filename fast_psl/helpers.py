@@ -6,6 +6,13 @@ from .constants import ICANN_MARKERS, PRIVATE_MARKERS, PSL_FILE, PSL_URL, PSL_TR
 
 PSL_FILE_LOCATION = os.path.join(os.path.dirname(__file__), '../', PSL_FILE)
 
+def get_marisa_trie(trie_path=PSL_TRIE_PICKLE_FILE):
+    """
+    Get a marisa trie from a pickled file.
+    """
+    from marisa_trie import Trie
+    return Trie().load(trie_path)
+
 def get_local_public_suffix_list(file_path=PSL_FILE_LOCATION) -> str:
     """
     Get the local public suffix list.
