@@ -68,7 +68,7 @@ jobs:
         set -x
         OLD_DATE=$(echo "${{ steps.latest_release.outputs.tag }}" | awk -F'.' '{print $3}' | grep -oP '^\d{8}')
         TODAY=$(echo "${{ steps.date.outputs.date }}" | grep -oP '^\d{8}')
-        LATEST_RELEASE_NUMBER=$(echo "${{ steps.latest_release.outputs.tag }}" | grep -oP 'r\K[0-9]+$')
+        LATEST_RELEASE_NUMBER=$(echo "${{ steps.latest_release.outputs.tag }}" | grep -oP 'r\K[0-9]+$') || true
         if [ "$OLD_DATE" == "$TODAY" ]; then
           if [ -z "$LATEST_RELEASE_NUMBER" ]; then
             NEW_RELEASE_NUMBER=1
