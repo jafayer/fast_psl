@@ -88,6 +88,12 @@ class PublicSuffixList:
 
         return domains
 
+    def save(self, file_path):
+        """
+        Save the marisa trie to a file.
+        """
+        self.public_suffixes.save(file_path)
+
     def get_public_suffix(self, domain: str, convert_to_punycode=False):
         """
         Get the public suffix of a domain.
