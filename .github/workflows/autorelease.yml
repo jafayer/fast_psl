@@ -47,13 +47,46 @@ jobs:
       id: date
       run: echo "::set-output name=date::$(date +'%Y%m%d')"
 
+    - name: install jq
+      run: |
+        sudo apt-get install -y jq
+      shell: bash
+
+    - name: Get latest release number
+      id: latest_release
+      run: |
+        LATEST_RELEASE_TAG=$(curl --silent "https://api.github.com/repos/$GITHUB_REPOSITORY/releases/latest" \
+        | jq -r .tag_name)
+        echo "::set-output name=tag::${LATEST_RELEASE_TAG}"
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      shell: bash
+
+    - name: Set Release Number
+      id: set_release_number
+      run: |
+        OLD_DATE=$(echo "${{ steps.latest_release.outputs.tag }}" | awk -F'.' '{print $3}' | grep -oP '^\d{8}')
+        TODAY=$(echo "${{ steps.date.outputs.date }}" | grep -oP '^\d{8}')
+        LATEST_RELEASE_NUMBER=$(echo "${{ steps.latest_release.outputs.tag }}" | grep -oP 'r\K[0-9]+$')
+        if [ "$OLD_DATE" == "$TODAY" ]; then
+          if [ -z "$LATEST_RELEASE_NUMBER" ]; then
+            NEW_RELEASE_NUMBER=1
+          else
+            NEW_RELEASE_NUMBER=$((LATEST_RELEASE_NUMBER + 1))
+          fi
+        else
+          NEW_RELEASE_NUMBER=1
+        fi
+        echo "::set-output name=release_number::${NEW_RELEASE_NUMBER}"
+      shell: bash
+
     - name: Create Release
       id: create_release
       uses: actions/create-release@v1
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
-        tag_name: 0.1.${{ steps.date.outputs.date }}
-        release_name: Release 0.1.${{ steps.date.outputs.date }}
+        tag_name: v0.1.${{ steps.date.outputs.date }}r${{ steps.set_release_number.outputs.release_number }}
+        release_name: Release ${{ steps.date.outputs.date }}r${{ steps.set_release_number.outputs.release_number }}
         draft: false
         prerelease: false
