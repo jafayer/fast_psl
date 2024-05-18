@@ -34,9 +34,13 @@ jobs:
 
     - name: Commit and push
       run: |
-        git add public_suffix_list.dat
-        git commit -m "Update public suffix list"
-        git push origin main --verbose
+        if git diff --quiet; then
+          echo "No changes to commit"
+        else
+          git add .
+          git commit -m "Update PSL"
+          git push
+        fi
       shell: bash
 
     - name: Get the date
