@@ -15,20 +15,74 @@ class etld_parts:
     subdomain: str # the subdomain
 
 class PublicSuffixList:
-    def __init__(self, strict=False):
+    def __init__(self, strict=False, trie_path=None, file_path=None, psl_text=None, remote_url=None):
         """
         Initialize the PublicSuffixList object.
         """
-        try:
-            psl_text = get_local_public_suffix_list()
-        except FileNotFoundError:
-            psl_text = fetch_remote_public_suffix_list()
-        
         self.strict = strict
 
-        if strict:
+        if trie_path is not None:
+            self.public_suffixes = Trie().load(trie_path)
+        elif psl_text is not None:
+            domains = self._process_psl_text(psl_text)
+            self.public_suffixes = Trie(domains, cache_size=LARGE_CACHE)
+        elif file_path is not None:
+            psl_text = get_local_public_suffix_list(file_path)
+            domains = self._process_psl_text(psl_text)
+            self.public_suffixes = Trie(domains, cache_size=LARGE_CACHE)
+        elif remote_url is not None:
+            psl_text = fetch_remote_public_suffix_list(remote_url)
+            domains = self._process_psl_text(psl_text)
+            self.public_suffixes = Trie(domains, cache_size=LARGE_CACHE)
+        else:
+            try:
+                psl_text = get_local_public_suffix_list()
+                domains = self._process_psl_text(psl_text)
+                self.public_suffixes = Trie(domains, cache_size=LARGE_CACHE)
+            except FileNotFoundError:
+                psl_text = fetch_remote_public_suffix_list()
+                domains = self._process_psl_text(psl_text)
+                self.public_suffixes = Trie(domains, cache_size=LARGE_CACHE)
+        try:
+            if file_path:
+                psl_text = get_local_public_suffix_list(file_path)
+            else:
+                psl_text = get_local_public_suffix_list()
+        except FileNotFoundError:
+            psl_text = fetch_remote_public_suffix_list()
+
+    @staticmethod
+    def from_marisa(trie_path: str):
+        """
+        Initialize a PublicSuffixList object from a marisa trie.
+        """
+        return PublicSuffixList(trie_path=trie_path)
+    
+    @staticmethod
+    def from_text_file(file_path: str):
+        """
+        Initialize a PublicSuffixList object from a text file.
+        """
+        return PublicSuffixList(file_path=file_path)
+    
+    @staticmethod
+    def from_remote_url(remote_url: str):
+        """
+        Initialize a PublicSuffixList object from a remote URL.
+        """
+        return PublicSuffixList(remote_url=remote_url)
+    
+    @staticmethod
+    def from_text(psl_text: str):
+        """
+        Initialize a PublicSuffixList object from a text string.
+        """
+        return PublicSuffixList(psl_text=psl_text)
+
+    def _process_psl_text(self, psl_text):
+        if self.strict:
             psl_text = filter_public_or_private_block(psl_text, public=True)
-        
+
         domains = [x for x in psl_text.split("\n") if x != "" and not x.startswith("//")]
         # loop through domains and determine if we should add punycode representation
         domains += [to_punycode(domain) for domain in domains if should_store_punycode(domain)]
@@ -36,7 +90,7 @@ class PublicSuffixList:
         # reverse the domains for the trie
         domains = [reverse(x) for x in domains]
 
-        self.public_suffixes = Trie(domains, cache_size=LARGE_CACHE)
+        return domains
 
     def get_public_suffix(self, domain: str, convert_to_punycode=False):
         """

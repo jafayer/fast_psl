@@ -1,5 +1,6 @@
 PSL_URL = "https://publicsuffix.org/list/public_suffix_list.dat"
 PSL_FILE = "public_suffix_list.dat"
+PSL_TRIE_PICKLE_FILE = "psl.marisa"
 
 ICANN_DOMAINS_STARTER = "// ===BEGIN ICANN DOMAINS==="
 ICANN_DOMAINS_ENDER = "// ===END ICANN DOMAINS==="
