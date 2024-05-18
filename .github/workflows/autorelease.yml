@@ -88,6 +88,6 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
         tag_name: v0.1.${{ steps.date.outputs.date }}r${{ steps.set_release_number.outputs.release_number }}
-        release_name: Release ${{ steps.date.outputs.date }}r${{ steps.set_release_number.outputs.release_number }}
+        release_name: Release v0.1.${{ steps.date.outputs.date }}r${{ steps.set_release_number.outputs.release_number }}
         draft: false
         prerelease: false
