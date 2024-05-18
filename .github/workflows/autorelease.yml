@@ -26,6 +26,7 @@ jobs:
 
     - name: Add deployment key
       run: |
+        mkdir -p ~/.ssh
         echo "${{ secrets.DEPLOY_KEY_PRIVKEY }}" > ~/.ssh/id_rsa
         chmod 600 ~/.ssh/id_rsa
         ssh-keyscan github.com >> ~/.ssh/known_hosts
