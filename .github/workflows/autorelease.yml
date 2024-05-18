@@ -14,9 +14,14 @@ jobs:
     steps:
     - uses: actions/checkout@v2
 
+    - name: Set up python
+      uses: actions/setup-python@v2
+      with:
+        python-version: '3.x'
+
     - name: Refresh PSL
       run: | # get the latest public suffix list and write to file
-        make refresh-psl-curl
+        make refresh-psl
       shell: bash
 
     - name: Configure Git
