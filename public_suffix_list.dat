@@ -5,8 +5,8 @@
 // Please pull this list from, and only from https://publicsuffix.org/list/public_suffix_list.dat,
 // rather than any other VCS sites. Pulling from any other URL is not guaranteed to be supported.
 
-// VERSION: 2025-04-22_06-04-13_UTC
-// COMMIT: f3023100c9846deecf0460c1cd3df0bb5da5f79f
+// VERSION: 2025-04-22_06-27-00_UTC
+// COMMIT: 6aeba31da00f72ffa035a8f1e4cd1b5c27dfaf01
 
 // Instructions on pulling and using this list can be found at https://publicsuffix.org/list/.
 
@@ -14189,6 +14189,11 @@ barsy.support
 barsy.uk
 barsy.co.uk
 barsyonline.co.uk
+
+// Luyani Inc. : https://luyani.com/
+// Submitted by Umut Gumeli <public-suffix-list@luyani.com>
+luyani.app
+luyani.net
 
 // Magento Commerce
 // Submitted by Damien Tournoud <dtournoud@magento.cloud>
