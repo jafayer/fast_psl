@@ -5,8 +5,8 @@
 // Please pull this list from, and only from https://publicsuffix.org/list/public_suffix_list.dat,
 // rather than any other VCS sites. Pulling from any other URL is not guaranteed to be supported.
 
-// VERSION: 2025-12-17_19-01-55_UTC
-// COMMIT: a82f39e9f9265dc959ee1e58ad55bbeab13bd0d5
+// VERSION: 2025-12-18_00-40-39_UTC
+// COMMIT: 44bf7aac6858882e64ac20440367fac80486a7ce
 
 // Instructions on pulling and using this list can be found at https://publicsuffix.org/list/.
 
@@ -13573,10 +13573,9 @@ on-fleek.app
 flutterflow.app
 
 // fly.io : https://fly.io
-// Submitted by Kurt Mackey <kurt@fly.io>
+// Submitted by Kurt Mackey <ops@fly.io>
+sprites.app
 fly.dev
-shw.io
-edgeapp.net
 
 // Forgerock : https://www.forgerock.com
 // Submitted by Roderick Parr <roderick.parr@forgerock.com>
@@ -14466,6 +14465,11 @@ luyani.net
 // Magento Commerce
 // Submitted by Damien Tournoud <dtournoud@magento.cloud>
 *.magentosite.cloud
+
+// Magic Patterns : https://www.magicpatterns.com
+// Submitted by Teddy Ni <security@magicpatterns.com>
+magicpatterns.app
+magicpatternsapp.com
 
 // Mail.Ru Group : https://hb.cldmail.ru
 // Submitted by Ilya Zaretskiy <zaretskiy@corp.mail.ru>
