@@ -5,8 +5,8 @@
 // Please pull this list from, and only from https://publicsuffix.org/list/public_suffix_list.dat,
 // rather than any other VCS sites. Pulling from any other URL is not guaranteed to be supported.
 
-// VERSION: 2026-11-25_16-42-05_UTC
-// COMMIT: b859dc136777a7efd40c38fbf27a673a45ee31cf
+// VERSION: 2026-11-25_18-55-17_UTC
+// COMMIT: 88260fe6a68fd46fbf3af5d6df49a575551d4728
 
 // Instructions on pulling and using this list can be found at https://publicsuffix.org/list/.
 
@@ -14647,10 +14647,6 @@ svn-repos.de
 leadpages.co
 lpages.co
 lpusercontent.com
-
-// Leapcell : https://leapcell.io/
-// Submitted by Leapcell Team <support@leapcell.io>
-leapcell.app
 
 // Liara : https://liara.ir
 // Submitted by Amirhossein Badinloo <info@liara.ir>
